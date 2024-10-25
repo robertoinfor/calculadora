@@ -73,13 +73,13 @@ fun CalculadoraView(viewModel: CalculadoraViewModel) {
                     .padding(vertical = 10.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                UpText(name = "Total: \n $total")
+                UpText(name = "Total: \n $total€")
                 Spacer(
                     modifier = Modifier
                         .height(10.dp)
                         .width(10.dp)
                 )
-                UpText(name = "Descuento: \n $totdesc")
+                UpText(name = "Descuento: \n $totdesc€")
             }
             TextField(
                 value = precio,
