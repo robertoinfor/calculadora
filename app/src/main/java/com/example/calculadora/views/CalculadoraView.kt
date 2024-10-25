@@ -8,10 +8,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -66,34 +72,50 @@ fun CalculadoraView() {
                     .wrapContentSize(Alignment.Center)
                     .padding(vertical = 10.dp)
                     .align(Alignment.CenterHorizontally)
-                    .wrapContentSize()
             ) {
-                UpText(name = "Total \n $total")
-                Spacer(modifier = Modifier.padding(10.dp))
-                UpText(name = "Descuento \n $totdesc")
+                UpText(name = "Total: \n $total")
+                Spacer(modifier = Modifier
+                    .height(10.dp)
+                    .width(10.dp)
+                )
+                UpText(name = "Descuento: \n $totdesc")
             }
             TextField(
                 value = precio,
                 onValueChange = { precio = it },
                 label = { Text(text = "Precio") })
 
+            Spacer(modifier = Modifier.height(10.dp))
+
             TextField(
                 value = descuento,
                 onValueChange = { descuento = it },
-                label = { Text(text = "Descuento %") })
+                label = { Text(text = "Descuento %")})
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             Button(onClick = {
-                total =
-                    (precio.toDouble() - (precio.toDouble() * descuento.toDouble()/100)).toString()
-                totdesc = (precio.toDouble() * descuento.toDouble()/100).toString()
-            }) {
+                totdesc = generarTotal(precio, descuento)
+                total = (precio.toDouble() - totdesc.toDouble()).toString()
+            }, Modifier
+                .align(Alignment.CenterHorizontally),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Blue
+                )
+            ) {
                 Text(text = "Generar descuento")
             }
-            Button(onClick = { precio = ""
+            Button(onClick = {
+                precio = ""
                 totdesc = ""
                 total = ""
                 descuento = ""
-            }) {
+            }, Modifier.align(Alignment.CenterHorizontally),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Red
+                )) {
                 Text(text = "Limpiar")
             }
         }
@@ -104,9 +126,9 @@ fun CalculadoraView() {
 @Composable
 fun UpText(name: String) {
     Text(
-        text = "$name\n", modifier = Modifier
+        text = "$name\n", fontSize = 22.sp, modifier = Modifier
             .background(color = Color.Gray, shape = CircleShape)
-            .padding(horizontal = 40.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp)
     )
 }
 
@@ -115,6 +137,10 @@ fun TitleBar(name: String) {
     Text(text = name, fontSize = 25.sp, fontWeight = FontWeight.Bold, color = Color.White)
 }
 
+fun generarTotal(precio: String, descuento: String) :String {
+    val totdesc = (precio.toDouble() * descuento.toDouble() / 100).toString()
+    return totdesc
+}
 
 
 
