@@ -15,11 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.calculadora.ui.theme.CalculadoraTheme
+import com.example.calculadora.viewModels.CalculadoraViewModel
 import com.example.calculadora.views.CalculadoraView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel: CalculadoraViewModel by viewModels()
+
         enableEdgeToEdge()
         setContent {
             CalculadoraTheme {
@@ -27,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CalculadoraView()
+                    CalculadoraView(viewModel = viewModel)
                 }
                 }
             }

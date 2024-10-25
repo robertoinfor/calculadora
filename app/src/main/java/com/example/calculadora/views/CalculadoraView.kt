@@ -35,11 +35,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.calculadora.viewModels.CalculadoraViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalculadoraView() {
+fun CalculadoraView(viewModel: CalculadoraViewModel) {
+    var totdesc = viewModel.totdesc.value.toString()
+    if (totdesc.equals("0.0")){totdesc = ""}
     var precio by remember {
         mutableStateOf(value = "")
     }
@@ -47,9 +50,6 @@ fun CalculadoraView() {
         mutableStateOf(value = "")
     }
     var total by remember {
-        mutableStateOf(value = "")
-    }
-    var totdesc by remember {
         mutableStateOf(value = "")
     }
     Scaffold(
@@ -74,9 +74,10 @@ fun CalculadoraView() {
                     .align(Alignment.CenterHorizontally)
             ) {
                 UpText(name = "Total: \n $total")
-                Spacer(modifier = Modifier
-                    .height(10.dp)
-                    .width(10.dp)
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                        .width(10.dp)
                 )
                 UpText(name = "Descuento: \n $totdesc")
             }
@@ -90,15 +91,17 @@ fun CalculadoraView() {
             TextField(
                 value = descuento,
                 onValueChange = { descuento = it },
-                label = { Text(text = "Descuento %")})
+                label = { Text(text = "Descuento %") })
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Button(onClick = {
-                totdesc = generarTotal(precio, descuento)
-                total = (precio.toDouble() - totdesc.toDouble()).toString()
-            }, Modifier
-                .align(Alignment.CenterHorizontally),
+            Button(
+                onClick = {
+                    totdesc = viewModel.generarTotal(precio, descuento)
+                    //totdesc = generarTotal(precio, descuento)
+                    total = (precio.toDouble() - totdesc.toDouble()).toString()
+                }, Modifier
+                    .align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Blue
@@ -106,16 +109,18 @@ fun CalculadoraView() {
             ) {
                 Text(text = "Generar descuento")
             }
-            Button(onClick = {
-                precio = ""
-                totdesc = ""
-                total = ""
-                descuento = ""
-            }, Modifier.align(Alignment.CenterHorizontally),
+            Button(
+                onClick = {
+                    precio = ""
+                    totdesc = ""
+                    total = ""
+                    descuento = ""
+                }, Modifier.align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Red
-                )) {
+                )
+            ) {
                 Text(text = "Limpiar")
             }
         }
@@ -137,10 +142,6 @@ fun TitleBar(name: String) {
     Text(text = name, fontSize = 25.sp, fontWeight = FontWeight.Bold, color = Color.White)
 }
 
-fun generarTotal(precio: String, descuento: String) :String {
-    val totdesc = (precio.toDouble() * descuento.toDouble() / 100).toString()
-    return totdesc
-}
 
 
 
