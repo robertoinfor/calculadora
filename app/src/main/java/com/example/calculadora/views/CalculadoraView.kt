@@ -16,10 +16,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculadora.viewModels.CalculadoraViewModel
@@ -42,7 +46,10 @@ import com.example.calculadora.viewModels.CalculadoraViewModel
 @Composable
 fun CalculadoraView(viewModel: CalculadoraViewModel) {
     var totdesc = viewModel.totdesc.value.toString()
-    if (totdesc.equals("0.0")){totdesc = ""}
+    if (totdesc == "0.0"){totdesc = ""}
+    var showAlert by remember {
+        mutableStateOf(false)
+    }
     var precio by remember {
         mutableStateOf(value = "")
     }
@@ -84,32 +91,35 @@ fun CalculadoraView(viewModel: CalculadoraViewModel) {
             TextField(
                 value = precio,
                 onValueChange = { precio = it },
-                label = { Text(text = "Precio") })
+                label = { Text(text = "Precio") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
 
             Spacer(modifier = Modifier.height(10.dp))
 
             TextField(
                 value = descuento,
                 onValueChange = { descuento = it },
-                label = { Text(text = "Descuento %") })
+                label = { Text(text = "Descuento %") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Button(
+            OutlinedButton(
                 onClick = {
                     totdesc = viewModel.generarTotal(precio, descuento)
-                    //totdesc = generarTotal(precio, descuento)
                     total = (precio.toDouble() - totdesc.toDouble()).toString()
                 }, Modifier
                     .align(Alignment.CenterHorizontally),
-                colors = ButtonDefaults.buttonColors(
+                    colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
-                    contentColor = Color.Blue
+                    contentColor = Color.Blue,
                 )
             ) {
                 Text(text = "Generar descuento")
             }
-            Button(
+            OutlinedButton(
                 onClick = {
                     precio = ""
                     totdesc = ""
@@ -124,9 +134,31 @@ fun CalculadoraView(viewModel: CalculadoraViewModel) {
                 Text(text = "Limpiar")
             }
         }
+
+        if (showAlert){
+            Alert(title = "Alerta", message = "Escriba precio y descuento", confirmText = "Aceptar", onConfirmClick = { showAlert = false }) {
+                
+            }
+        }
     }
 }
 
+@Composable
+fun Alert(
+    title: String,
+    message: String,
+    confirmText: String,
+    onConfirmClick: () -> Unit,
+    onDismissClick: () -> Unit
+) {
+    AlertDialog(
+        title = {Text(text = title)},
+        text = {Text(text = message)},
+        onDismissRequest = { onDismissClick },
+        confirmButton = { Button(onClick = { onConfirmClick }) {
+        Text(text = confirmText)
+    } })
+}
 
 @Composable
 fun UpText(name: String) {
