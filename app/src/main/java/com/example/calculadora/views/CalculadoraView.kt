@@ -1,21 +1,14 @@
 package com.example.calculadora.views
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -40,6 +33,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculadora.viewModels.CalculadoraViewModel
+import com.example.calculadora.components.TitleBar
+import com.example.calculadora.components.Alert
+import com.example.calculadora.components.Card
+import com.example.calculadora.components.DoubleCard
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,29 +77,14 @@ fun CalculadoraView(viewModel: CalculadoraViewModel) {
                     .padding(vertical = 10.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                UpText(name = "Total: \n $total€")
-                Spacer(
-                    modifier = Modifier
-                        .height(10.dp)
-                        .width(10.dp)
-                )
-                UpText(name = "Descuento: \n $totdesc€")
+                DoubleCard("Total: \n$total€", "Descuento: \n $totdesc€")
             }
-            TextField(
-                value = precio,
-                onValueChange = { precio = it },
-                label = { Text(text = "Precio") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            TextField(
-                value = descuento,
-                onValueChange = { descuento = it },
-                label = { Text(text = "Descuento %") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
+            Card(descuento, "Precio")
+            Card(precio, "Descuento %")
+
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -143,36 +125,11 @@ fun CalculadoraView(viewModel: CalculadoraViewModel) {
     }
 }
 
-@Composable
-fun Alert(
-    title: String,
-    message: String,
-    confirmText: String,
-    onConfirmClick: () -> Unit,
-    onDismissClick: () -> Unit
-) {
-    AlertDialog(
-        title = {Text(text = title)},
-        text = {Text(text = message)},
-        onDismissRequest = { onDismissClick },
-        confirmButton = { Button(onClick = { onConfirmClick }) {
-        Text(text = confirmText)
-    } })
-}
 
-@Composable
-fun UpText(name: String) {
-    Text(
-        text = "$name\n", fontSize = 22.sp, modifier = Modifier
-            .background(color = Color.Gray, shape = CircleShape)
-            .padding(horizontal = 20.dp, vertical = 10.dp)
-    )
-}
 
-@Composable
-fun TitleBar(name: String) {
-    Text(text = name, fontSize = 25.sp, fontWeight = FontWeight.Bold, color = Color.White)
-}
+
+
+
 
 
 
